@@ -6,6 +6,8 @@ import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { db } from "@/lib/firebase/config";
 import { useAuth } from "@/lib/firebase/auth-context";
 import { useRouter } from "next/navigation";
+import ProductVariantForm from "@/components/products/ProductVariantForm";
+import ImageUploader from "@/components/products/ImageUploader";
 
 export default function SubmitProductPage() {
   const { appUser } = useAuth();
@@ -20,6 +22,9 @@ export default function SubmitProductPage() {
     stock: "",
     category: "",
   });
+
+  const [variants, setVariants] = useState([]);
+  const [images, setImages] = useState([]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -42,11 +47,15 @@ export default function SubmitProductPage() {
         stock: parseInt(formData.stock),
         category: formData.category,
         businessType: appUser.businessSegment,
+        variants: variants,
+        images: images,
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
       });
       setSuccess(true);
       setFormData({ barcode: "", name: "", price: "", stock: "", category: "" });
+      setVariants([]);
+      setImages([]);
       setTimeout(() => setSuccess(false), 3000);
     } catch (error: any) {
       console.error("Error adding document: ", error);
@@ -144,6 +153,14 @@ export default function SubmitProductPage() {
                 className="w-full bg-slate-900/50 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-emerald-500 transition-colors"
                 placeholder="e.g. Hardware, Grocery, Pharmacy"
               />
+            </div>
+
+            <div className="space-y-2">
+              <ImageUploader images={images} onChange={setImages} />
+            </div>
+
+            <div className="space-y-2">
+              <ProductVariantForm variants={variants} onChange={setVariants} />
             </div>
 
             <div className="pt-4 border-t border-slate-700/50">

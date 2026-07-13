@@ -1,5 +1,6 @@
 import Sidebar from "@/components/layout/Sidebar";
 import Navbar from "@/components/layout/Navbar";
+import Footer from "@/components/layout/Footer";
 
 export default function AdminLayout({
   children,
@@ -20,6 +21,7 @@ export default function AdminLayout({
           <div className="max-w-7xl mx-auto">
             {children}
           </div>
+          <Footer />
         </main>
       </div>
     </div>
